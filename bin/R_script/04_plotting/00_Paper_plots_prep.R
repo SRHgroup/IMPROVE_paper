@@ -53,7 +53,7 @@ colnames(all_peptides)
 #insert data 
 # -------------------------------------------------
 # NNalign
-NNalign_results <- read.table("results/NNalign/all.test_pred_cmb")
+NNalign_results <- read.table("results/NNalign/all.test_pred_cmb_ny")
 NNalign_results <- NNalign_results %>% select(-V10)
 
 colnames(NNalign_results) <- NNalign_results[1,]
@@ -76,11 +76,11 @@ NNalign_results <- NNalign_results %>%
 Feature_round = 5
 # IMPROVE 5 cv 
 Feature_importance <- read.table(file = "results/5_fold_CV/TME_excluded/Feature_importance_TME_excluded.txt", header = T)
-pred_df <- read.table(file = "results/5_fold_CV/TME_excluded/pred_df_TME_excludedprime_1.txt", header = T)
+pred_df <- read.table(file = "results/5_fold_CV/TME_excluded/pred_df_TME_excluded.txt", header = T)
 pred_df <- pred_df %>% mutate(ID = paste(Patient,HLA_allele,Mut_peptide, sep = "_")) %>% select(ID,prediction_rf)
 # IMPROVE TME 5 cv 
 Feature_importance_TME <- read.table("results/5_fold_CV/TME_included/Feature_importance_TME_included.txt", sep = "\t")
-pred_df_TME_include <- read.table(file = "results/5_fold_CV/TME_included/pred_df_TME_includedprime_1.txt", header = T)
+pred_df_TME_include <- read.table(file = "results/5_fold_CV/TME_included/pred_df_TME_included.txt", header = T)
 pred_df_TME_include <- pred_df_TME_include %>% 
   rename(.,  "prediction_rf_tme" = "prediction_rf" ) %>% 
   mutate(ID = paste(Patient,HLA_allele,Mut_peptide, sep = "_")) 
@@ -154,6 +154,7 @@ all_peptides<- all_peptides %>%
   mutate(minus_inst = -Inst) %>% 
   mutate(minus_pI = -pI) 
 
+# table 
 
 save(Pred_Modelling,all_peptides, file = "data/04_plotting/Rdata/Final_prep_plotting.Rdata")
 write.table(Pred_Modelling, file = "data/04_plotting/Pred_modelling.txt", sep = "\t", col.names = T,quote = F)

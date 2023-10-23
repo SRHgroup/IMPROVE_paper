@@ -128,7 +128,8 @@ plot_response <- function(data = all_peptides,
                           valid = FALSE,
                           y_position = NULL,
                           facet = FALSE,
-                          limit = c(0,100)) {
+                          limit = c(0,100),
+                          map_level = T) {
  # mini <- data %>% select(y_val) %>% min() %>% as.numeric()
 #  maxi <- data %>% select(y_val) %>% max() %>% as.numeric()
 
@@ -141,15 +142,15 @@ plot_response <- function(data = all_peptides,
     scale_fill_manual(breaks = c("no","yes"), values = response_col ) +
     theme_bw()+
     theme(legend.position = "none", 
-          axis.title.y = element_text(size = 18),
-          axis.title.x = element_text(size = 12),
-          axis.text.x = element_text(size = 18),
-          axis.text.y = element_text(size = 14)) +
+          axis.title.y = element_text(size = 14),
+          axis.title.x = element_text(size = 10),
+          axis.text.x = element_text(size = 12),
+          axis.text.y = element_text(size = 12)) +
     labs(x = "", y = y_label, color = "Immunogenic", fill = "Immunogenic") +
     # facet_wrap(Sample ~ .) +
     geom_signif(comparisons = list(c("no","yes")),
                 na.rm = T,
-                map_signif_level = T,
+                map_signif_level = map_level,
                 data = data,
                 textsize = 5,
                 y_position = y_position,
@@ -385,6 +386,7 @@ pred_per_patient <- function(y_val = predition_rf, c = "mUC",
 
 
 top_figure_percent <- function(top_number = 20) {
+  set.seed(10)
   top_pred <- Pred_Modelling %>% 
     group_by(Patient) %>% 
     top_n(top_number,prediction_rf) %>% 
@@ -444,12 +446,12 @@ top_figure_percent <- function(top_number = 20) {
     geom_line(aes(group = Patient),alpha = 0.2) +
     geom_boxplot(aes(fill = type),alpha = 0.5) +
     geom_quasirandom(aes(color = type),size = 3, alpha = 0.6) + 
-    scale_x_discrete(labels = c("Random","RankEL","RF","RF TME") ,breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"))+
+    scale_x_discrete(labels = c("Random","RankEL","IMPROVE","IMPROVE TME") ,breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"))+
     scale_y_continuous(breaks = c(0,0.25,0.5,0.75,1),labels = c("0","0.25","0.5","0.75","1")) +
     scale_fill_manual(breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"), values = model_col_f5_random  ,
-                      labels = c("Random","RankEL","RF","RF TME") ) +
+                      labels = c("Random","RankEL","IMPROVE","IMPROVE TME") ) +
     scale_color_manual(breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"), values = model_col_f5_random  ,
-                       labels = c("Random","RankEL","RF","RF TME") ) +
+                       labels = c("Random","RankEL","IMPROVE","IMPROVE TME") ) +
     #geom_line(aes(group = Sample)) +
     geom_signif(comparisons = list(c("prediction_rf","rank_EL"),
                                    c("prediction_rf_TME","prediction_rf"),
@@ -469,19 +471,19 @@ top_figure_percent <- function(top_number = 20) {
     labs(x = "", fill = "Model",color = "Model", y = "Fraction of immunugenic neoepitope") + 
     guides(fill=guide_legend(ncol=4,title.position ="left")) +
     ggtitle(paste("Top hit in top:",top_number))
-  ggsave(p1, file=paste0("results/PaperPlots/Fig5/top_percent_pval_test",top_number,".pdf"), height = 5, width = 5 )
+  ggsave(p1, file=paste0("results/PaperPlots/Fig5/top_percent_pval_test",top_number,".pdf"), height = 5, width = 10 )
   
   p2 <- top_tab %>% 
     ggplot(., aes(x = type, y = fraction_of_response)) +
     geom_line(aes(group = Patient),alpha = 0.2) +
     geom_boxplot(aes(fill = type),alpha = 0.5) +
     geom_quasirandom(aes(color = type),size = 3, alpha = 0.6) + 
-    scale_x_discrete(labels = c("Random","RankEL","RF","RF TME") ,breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"))+
+    scale_x_discrete(labels = c("Random","RankEL","IMPROVE","IMPROVE TME") ,breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"))+
     scale_y_continuous(breaks = c(0,0.25,0.5,0.75,1),labels = c("0","0.25","0.5","0.75","1")) +
     scale_fill_manual(breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"), values = model_col_f5_random  ,
-                      labels = c("Random","RankEL","RF","RF TME") ) +
+                      labels = c("Random","RankEL","IMPROVE","IMPROVE TME") ) +
     scale_color_manual(breaks = c("Random","rank_EL","prediction_rf","prediction_rf_TME"), values = model_col_f5_random  ,
-                       labels = c("Random","RankEL","RF","RF TME") ) +
+                       labels = c("Random","RankEL","IMPROVE","IMPROVE TME") ) +
     #geom_line(aes(group = Sample)) +
     geom_signif(comparisons = list(c("prediction_rf","rank_EL"),
                                    c("prediction_rf_TME","prediction_rf"),
@@ -501,7 +503,7 @@ top_figure_percent <- function(top_number = 20) {
     labs(x = "", fill = "Model",color = "Model", y = "Fraction of immunugenic neoepitope") + 
     guides(fill=guide_legend(ncol=4,title.position ="left")) +
     ggtitle(paste("Top hit in top:",top_number))
-  ggsave(p2, file=paste0("results/PaperPlots/Fig5/top_percent_no_test_pval",top_number,".pdf"), height = 5, width = 5 )
+  ggsave(p2, file=paste0("results/PaperPlots/Fig5/top_percent_no_test_pval",top_number,".pdf"), height = 5, width = 10 )
   
 }
 

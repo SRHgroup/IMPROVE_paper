@@ -11,14 +11,11 @@ library(stringr)
 # Run python feature calculation script first
 # python3 bin/python_script/feature_calculations.py --file data/01_data/01_Validated_neoepitopes.txt --dataset "Validated_neoepitopes" --ProgramDir "/Users/annieborch/Documents/programs/" --outfile "data/02_feature_data/02_Validated_neoepitopes_calculated_features.tsv" --TmpDir "/Users/annieborch/Documents/programs/"
 # -----------------------------------------------
-
+table(all_peptides$response,all_peptides$Sample)
 # load data 
 all_peptides <- read.table("data/02_feature_data/02_Validated_neoepitopes_calculated_features.tsv", sep = "\t")
 colnames(all_peptides) <- all_peptides[1,]
 all_peptides <- all_peptides[-1,]
-
-colnames(all_peptides)
-unique(all_peptides$Sample)
 
 # source function script 
 source("bin/R_script/99_functions.R")
@@ -89,12 +86,18 @@ all_peptides <-  all_peptides %>% right_join(.,fs_data)
 # -----------------------------------------------------------------------------
 # MCP counter features
 # -----------------------------------------------------------------------------
+all_peptides$Sample_TME <- all_peptides$Sample
+#unique(all_peptides$Sample)
+#all_peptides$Sample_TME <- gsub("MM909_15_2","MM909_15_1", all_peptides$Sample_TME)
 # load MCP counter data
-load("data/02_feature_data/TME_and_mcp_counter.Rdata")
+load("data/02_feature_data/TME_and_mcp_counter_raw.Rdata")
 unique(all_peptides$Sample)
+# peptides are predicted with 22_2
 
 all_peptides <- all_peptides %>% 
-  left_join(.,MCP_counter_matrix) 
+  left_join(.,MCP_counter_matrix, by = c("Sample_TME"="Sample")) 
+
+all_peptides$MCPmean <- MCP_counter_mean[all_peptides$Sample_TME]
 
 
 
@@ -107,41 +110,25 @@ mutate(HLA_type = str_sub(HLA_allele, start = 1L, end = 5L)) %>%
   mutate(HLA_num = str_sub(HLA_allele, start = 6L, end = 10L)) 
 
 
-hla_exp <- TME_feature %>% 
-#  filter(Sample %in% Sampel_to_select ) %>% 
-  filter(grepl("HLA",hugo_symbol)) %>% 
+
+hla_exp <- HLA_feature %>% 
   mutate(sample_hla = paste(Sample,hugo_symbol,sep = ".")) %>% 
   mutate(HLAexp  = mean_exp) %>% 
-  dplyr::select(Sample,sample_hla,HLAexp)
+  ungroup() %>% 
+  dplyr::select(sample_hla,HLAexp) 
 
 
 
 all_peptides <- all_peptides %>% 
-  mutate(sample_hla = paste(Sample,HLA_type,sep = ".")) %>% 
-  left_join(.,hla_exp)
-
-
-
-  
+  mutate(sample_hla = paste(Sample_TME,HLA_type,sep = ".")) %>% 
+  left_join(.,hla_exp, by = "sample_hla")
 
 # -----------------------------------------------------------------------------
 # CYT 
 # --------------------------------------------------
 # ----- geometric mean ----- # 
-
-TME_marker <- TME_feature %>% 
-#  filter(Sample %in% Sampel_to_select ) %>% 
-  mutate(Sampe_hugo = paste(Sample,hugo_symbol, sep = "_")) %>% 
-  distinct(Sampe_hugo, .keep_all = T) %>% 
-  dplyr::select(Sample,hugo_symbol,mean_exp) %>% 
-  filter(hugo_symbol %in% c("PRF1","GZMA")) %>% 
-  spread(., key = hugo_symbol, value = mean_exp) 
-
-# calculate geometric mean 
-TME_marker$CYT <- apply(TME_marker[ ,c('PRF1', 'GZMA')], 1, gm_mean)
-
 all_peptides <- all_peptides %>% 
-  left_join(TME_marker %>% select(Sample,CYT), by = "Sample")
+  left_join(TME_marker %>% select(Sample,CYT), by = c("Sample_TME"="Sample"))
 
 
 # RNA data confirm mutations from ibel 
@@ -218,7 +205,7 @@ cols_to_numeric = c('Aro', 'Inst', 'CysRed','RankEL','RankBA','NetMHCExp',
 'PropSmall','PropAro','PropBasic','PropAcidic','DAI','Stability','Foreigness',
 'CelPrev','PrioScore','VarAlFreq','CYT','HLAexp','Monocytes',
 'Tcells','TcellsCD8', 'CytoxLympho','Blinage','NKcells',
-'MyeloidDC','Neutrophils','Endothelial' ,'Fibroblasts')
+'MyeloidDC','Neutrophils','Endothelial' ,'Fibroblasts','MCPmean')
 
 
 colnames(all_peptides)
@@ -232,7 +219,6 @@ which(is.na(all_peptides[cols_to_numeric]))
 
 # if NA put in the mean of the column as RF do not take NA as input
 # ----------------------------------------
-# 
 for(i in 1:ncol(all_peptides)){
   all_peptides[is.na(all_peptides[,i]), i] <- mean(all_peptides[,i], na.rm = TRUE)
 }
@@ -245,6 +231,6 @@ save(all_peptides, file = "data/04_plotting/Rdata/04_pepides_for_plotting.Rdata"
 
 # Save data for 5-fold CV
 # -------------------------------------
-write.table(all_peptides, file = "data/02_feature_data/02_2_Validated_neoepitopes_calculated_features_TME_prime_1.txt", quote = F, sep = '\t')
+write.table(all_peptides, file = "data/02_feature_data/02_2_Validated_neoepitopes_calculated_features_TME.txt", quote = F, sep = '\t')
 
 

@@ -61,21 +61,6 @@ load("data/04_plotting/Survival_data/05_cut_offs.Rdata")
 # ------------------------------------------------------------------------------
 top_figure_percent(top_number = 20)
 top_figure_percent(top_number = 50)
-
-
-SupFig5A <- Pred_Modelling %>% select(cohort,prediction_rf,prediction_rf_tme) %>% 
-  gather(., key=model, value = pred_score, -cohort) %>% 
-  ggplot(., aes(x = pred_score )) +
-  geom_density(aes(color = cohort, linetype = model)) + 
-  theme_bw() + 
-  scale_x_log10() +
-  labs(x = "Log10 prediction score") +
-  scale_linetype_manual(
-    breaks = c("prediction_rf","prediction_rf_tme"), 
-    values = c("dashed","solid"),
-    labels = c("IMPROVE","IMPROVE TME") )  +
-  theme(legend.position = "bottom")
-
 # figure 5 C
 # ------------------------------------------------------------------------------
 
@@ -222,7 +207,7 @@ CM_figure_rf_spec <- ggplot(data =  CM_plotting_rf_spec,
 # EL rank model 
 # ---------------------------
 
-Pred_Modelling$EL_cat_spec <- ifelse(Pred_Modelling$RankEL < 0.5, 1,0)
+Pred_Modelling$EL_cat_spec <- ifelse(Pred_Modelling$RankEL < 0.05, 1,0)
 Pred_Modelling$EL_cat_cross <- ifelse(Pred_Modelling$RankEL < 0.45, 1,0)
 Pred_Modelling$EL_cat_spec <- factor(Pred_Modelling$EL_cat_spec, levels = c(0,1))
 Pred_Modelling$EL_cat_cross <- factor(Pred_Modelling$EL_cat_cross, levels = c(0,1))
@@ -431,9 +416,9 @@ n1 <- all_peptides %>% select(Sample,Patient) %>%
   filter(n==1) %>% mutate(timepoint = "1")
 
 
-Sample_to_incude <- bind_rows(n1,n2) %>% filter(!Sample %in% c("PATIEN08","MM909_24_1")) %>% pull(Sample)
-
-All_samples_clinical <- All_samples_clinical %>% filter(!Patient  %in% c("MM-24","RH-08",""))
+Sample_to_incude <- bind_rows(n1,n2) %>% filter(!Sample %in% c("PATIEN08","MM909_15_1","MM909_24_1","MM909_22_1")) %>% pull(Sample) #"MM909_24_1","MM909_22_1",
+Sample_to_incude <- c(Sample_to_incude,"MM909_15_2") 
+All_samples_clinical <- All_samples_clinical %>% filter(!Patient %in% c("RH-08","MM-22","MM-24"))  #,"MM-22" "MM-24",
 
 Pred_Modelling_total_all_peptide <- Pred_Modelling_total_all_peptide %>% 
   filter(Sample %in% Sample_to_incude)  %>% 
@@ -491,53 +476,6 @@ All_samples_clinical$PFS.Time <- gsub(",",".", All_samples_clinical$PFS.Time)
 All_samples_clinical$PFS.Time <- as.numeric(All_samples_clinical$PFS.Time)
 All_samples_clinical$OS.Time <- gsub(",",".", All_samples_clinical$OS.Time)
 All_samples_clinical$OS.Time <- as.numeric(All_samples_clinical$OS.Time)
-
-
-# 
-PFS_nubmer_response_cor <- cor(x = All_samples_clinical$PFS.Time,
-                               y = All_samples_clinical$fraction_response ,
-                               method = 'spearman')
-PFS_number_response <- All_samples_clinical  %>%
-  ggplot(. ,aes( x = PFS.Time , y = fraction_response)) + #,label = Patient
-  geom_point(aes(color = cohort)) +
-  #  geom_text(hjust=0, vjust=0) +
-  geom_smooth(method = "lm",  colour = '#525252') +
-  scale_color_manual(breaks = c("Basket","Melanoma","mUC"), values = cohort_col) +
-  theme_bw() +
-  # facet_grid(.~cohort)+
-  labs(x = "PFS", y = "Fraction immunogenic neoepitopes", color = "Cohort") +
-  theme(legend.position = "none") +
-  annotate('text', label = paste('Spearman =', round(PFS_nubmer_response_cor, digits = 3)), y = 0.1, x = 20)
-
-
-
-OS_nubmer_response_cor <- cor(x = All_samples_clinical$OS.Time,
-                              y = All_samples_clinical$fraction_response ,
-                              method = 'spearman')
-OS_number_response <- All_samples_clinical  %>%
-  ggplot(. ,aes( x = OS.Time , y = fraction_response)) + #,label = Patient
-  geom_point(aes(color = cohort)) +
-  #  geom_text(hjust=0, vjust=0) +
-  geom_smooth(method = "lm",  colour = '#525252') +
-  scale_color_manual(breaks = c("Basket","Melanoma","mUC"), values = cohort_col) +
-  theme_bw() +
-  # facet_grid(.~cohort)+
-  labs(x = "OS", y = "Fraction immunogenic neoepitopes", color = "Cohort") +
-  annotate('text', label = paste('Spearman =', round(OS_nubmer_response_cor, digits = 3)), y = 0.1, x = 20)+
-  theme(legend.position = "bottom")
-
-
-os_response_legend <- get_legend(OS_number_response)
-OS_number_response <- OS_number_response + theme(legend.position = "none")
-
-pdf(file = 'results/PaperPlots/Fig5/SubFigure5B_C.pdf', width = 10, height = 4)
-ggdraw() +
-  draw_plot(OS_number_response, .0, .0, 0.5, 1) +
-  draw_plot(PFS_number_response, .5, .0, 0.5, 1) +
-  draw_plot(os_response_legend  , .0, -.46, 1, 1) 
-
-dev.off()
-
 
 
 quantile_prediction_rf_TME <-as.numeric(quantile(All_samples_clinical$prediction_rf_TME))
@@ -692,10 +630,10 @@ Fig5F <- ggarrange(PFS_pred_EL_05_cut_survplot$plot, PFS_pred_neo_model_cut_surv
 
 pdf(file = "results/PaperPlots/Fig5/Fig5_ALL.pdf", width = 18, height =20 )
 ggdraw() +
-  draw_plot(p_rankel,        .0, .68, .31, 0.14)+
-  draw_plot(Fig5C_cutoff_figure,        .335, .68, .31, 0.14)+
-  draw_plot(Fig5C_cutoff_figure_TME,    .67, .68, .31, 0.14) +
-  draw_plot(Fig5C_cutoff_figure_legend, .46, 0.62, 0.1, 0.1) +
+  draw_plot(p_rankel,        .0, .66, .31, 0.12)+
+  draw_plot(Fig5C_cutoff_figure,        .335, .66, .31, 0.12)+
+  draw_plot(Fig5C_cutoff_figure_TME,    .67, .66, .31, 0.12) +
+  draw_plot(Fig5C_cutoff_figure_legend, .46, 0.82, 0.1, 0.12) +
   
   draw_plot(Fig5F,         .0, .0, 1, 0.52) +
   draw_plot_label(c(paste0("MCC:",MCC_EL_cross),paste0("MCC:",MCC_EL_spec),
@@ -709,7 +647,7 @@ ggdraw() +
   draw_plot(CM_figure_rf_spec, .5, .5, .16, 0.14) +
   draw_plot(CM_figure_TME_cross, .67, .5, .155, 0.14) +
   draw_plot(CM_figure_TME_spec, .84, .5, .16, 0.14) +
-  draw_plot_label(c("A","B","C","D","E"), x = c(0,0.33,.0,.0,.0), y = c(1,1,0.84,0.65,0.5), size = 22)  
+  draw_plot_label(c("A","B","C","D","E"), x = c(0,0.5,.0,.0,.0), y = c(1,1,0.80,0.65,0.5), size = 22)  
 
 
 dev.off()

@@ -101,7 +101,7 @@ unique(all_peptides_extra_data$Sample)
 all_peptides_extra_data <- all_peptides_extra_data %>% 
   left_join(.,MCP_counter_matrix) 
 
-
+all_peptides_extra_data$MCPmean <- MCP_counter_mean[all_peptides_extra_data$Sample]
 
 # -----------------------------------------------------------------------------
 # Add Expression for HLA alleles 
@@ -112,9 +112,7 @@ all_peptides_extra_data <- all_peptides_extra_data %>%
   mutate(HLA_num = str_sub(HLA_allele, start = 6L, end = 10L)) 
 
 
-hla_exp <- TME_feature %>% 
-  #  filter(Sample %in% Sampel_to_select ) %>% 
-  filter(grepl("HLA",hugo_symbol)) %>% 
+hla_exp <- HLA_feature %>% 
   mutate(sample_hla = paste(Sample,hugo_symbol,sep = ".")) %>% 
   mutate(HLAexp  = mean_exp) %>% 
   dplyr::select(Sample,sample_hla,HLAexp)
@@ -133,18 +131,6 @@ all_peptides_extra_data <- all_peptides_extra_data %>%
 # CYT 
 # --------------------------------------------------
 # ----- geometric mean ----- # 
-
-TME_marker <- TME_feature %>% 
-  #  filter(Sample %in% Sampel_to_select ) %>% 
-  mutate(Sampe_hugo = paste(Sample,hugo_symbol, sep = "_")) %>% 
-  distinct(Sampe_hugo, .keep_all = T) %>% 
-  dplyr::select(Sample,hugo_symbol,mean_exp) %>% 
-  filter(hugo_symbol %in% c("PRF1","GZMA")) %>% 
-  spread(., key = hugo_symbol, value = mean_exp) 
-
-# calculate geometric mean 
-TME_marker$CYT <- apply(TME_marker[ ,c('PRF1', 'GZMA')], 1, gm_mean)
-
 all_peptides_extra_data <- all_peptides_extra_data %>% 
   left_join(TME_marker %>% select(Sample,CYT), by = "Sample")
 
@@ -200,7 +186,7 @@ cols_to_numeric = c('Aro', 'Inst', 'CysRed','RankEL','RankBA','NetMHCExp',
                     'PropSmall','PropAro','PropBasic','PropAcidic','DAI','Stability','Foreigness',
                     'CelPrev','PrioScore','VarAlFreq','CYT','HLAexp','Monocytes',
                     'Tcells','TcellsCD8', 'CytoxLympho','Blinage','NKcells',
-                    'MyeloidDC','Neutrophils','Endothelial' ,'Fibroblasts')
+                    'MyeloidDC','Neutrophils','Endothelial' ,'Fibroblasts','MCPmean')
 
 
 cols_to_numeric %in%  colnames(all_peptides_extra_data) 

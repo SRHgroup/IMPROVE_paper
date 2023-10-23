@@ -76,10 +76,8 @@ source("bin/R_script/04_plotting/05_Figure5.R")
 
 
 # ------------------------------------------------------------------------------
-#                 Figure 5
+#                 Figure 6
 # ------------------------------------------------------------------------------
 
-
-source("bin/R_script/04_plotting/06_1_benchmark_data_prep.R")
 source("bin/R_script/04_plotting/06_2_benchmark_results.R")
 

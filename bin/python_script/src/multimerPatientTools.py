@@ -213,16 +213,16 @@ def runFeatureGeneration_NetMHCpan_stab_prime_molecular(df,predDir,dataSet="my_d
     predDir_net41 = os.path.join(predDir,'netmhcpan41')
    # predDir_net40 = os.path.join(predDir,'netmhcpan40')
     predDir_netStab = os.path.join(predDir,'netmhcstabpan')
-  #  predDir_prime = os.path.join(predDir,'PRIME')
+    predDir_prime = os.path.join(predDir,'PRIME')
     # prime 1.0
-    predDir_prime = os.path.join(predDir,'PRIME-1.0')
+   # predDir_prime = os.path.join(predDir,'PRIME-1.0')
 
     utilsDir_net41 = os.path.join(utilsDir,'netMHCpan-4.1','netmhcpan')
   #  utilsDir_net41 = os.path.join(utilsDir,'netMHCpan-4.0','netmhcpan')
     utilsDir_netStab = os.path.join(utilsDir,'netMHCstabpan-1.0','netMHCstabpan')
-   # utilsDir_prime = os.path.join(utilsDir,'PRIME','PRIME')
+    utilsDir_prime = os.path.join(utilsDir,'PRIME','PRIME')
     # prime 1.0
-    utilsDir_prime = os.path.join(utilsDir,'PRIME-1.0','PRIME')
+    #utilsDir_prime = os.path.join(utilsDir,'PRIME-1.0','PRIME')
 
     if clean:
         for predDir in [os.path.join(predDir_net41,'mut'),os.path.join(predDir_net41,'wt'),predDir_netStab,predDir_prime]:

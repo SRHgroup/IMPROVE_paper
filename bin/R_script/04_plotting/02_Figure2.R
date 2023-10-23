@@ -386,7 +386,7 @@ plot2 <- plot_response_sup_fig2(y_val ='CelPrev', y_label = "CelPrev",log = FALS
 plot3 <- plot_response_sup_fig2(y_val ='CysRed', y_label = "CysRed",log = FALSE, limit = c(0,24500))
 plot4 <- plot_response_sup_fig2(y_val ='Inst', y_label = "Inst",log = FALSE, limit = c(-65,380))
 plot6 <- plot_response_sup_fig2(y_val ='HydroAll', y_label = "HydroAll",log = FALSE, limit = c(-3.7,4.9))
-
+all_peptides$mw <- as.numeric(all_peptides$mw)
 plot8 <- plot_response_sup_fig2(y_val ='mw', y_label = "mw",log = FALSE, limit = c(650,1750))
 plot9 <- plot_response_sup_fig2(y_val ='NetMHCExp', y_label = "NetMHCExp",log = TRUE, limit = c(0.001,350))
 plot10 <- plot_response_sup_fig2(y_val ='PropAcidic', y_label = "PropAcidic",log = FALSE, limit = c(0,0.90))

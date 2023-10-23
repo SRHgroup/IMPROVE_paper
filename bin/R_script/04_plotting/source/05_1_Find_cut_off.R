@@ -21,8 +21,8 @@ library(openxlsx)
 # calculate cut of for rf TME
 # ----------------------------------------
 min(pred_df_TME_include$prediction_rf_tme)
-results_best_sensitivity  <- data.frame(matrix(ncol = 3, nrow = 0))
-colnames(results_best_sensitivity) <- c("cutoff","sensitivity","speceficity")
+results_best_sensitivity_rf_tme  <- data.frame(matrix(ncol = 3, nrow = 0))
+colnames(results_best_sensitivity_rf_tme) <- c("cutoff","sensitivity","speceficity")
 for (cut in seq(from = 0.2, to = 0.7, by = 0.005)) {
 # print(i)
   cm_info <- ConfusionMatrixInfo( data = Pred_Modelling, predict = "prediction_rf_tme", 
@@ -35,18 +35,18 @@ for (cut in seq(from = 0.2, to = 0.7, by = 0.005)) {
   
   vec <-  c(cut,sensitivity,speceficity)
   print(vec)
-  results_best_sensitivity <-  rbind(results_best_sensitivity,vec)
+  results_best_sensitivity_rf_tme <-  rbind(results_best_sensitivity_rf_tme,vec)
 }
 
 
 
 
 
-colnames(results_best_sensitivity) <- c("cutoff","sensitivity","speceficity")
+colnames(results_best_sensitivity_rf_tme) <- c("cutoff","sensitivity","speceficity")
 
 
 Fig5C_cutoff_figure_TME <-
-  results_best_sensitivity %>% gather(., key = "type",value="value", -cutoff) %>% 
+  results_best_sensitivity_rf_tme %>% gather(., key = "type",value="value", -cutoff) %>% 
   ggplot(.,aes(x = cutoff, y = value)) +
   geom_line(aes(color = type), size = 1)+
   theme_bw() +
@@ -54,7 +54,7 @@ Fig5C_cutoff_figure_TME <-
 #  geom_vline(xintercept = 0.482) +
 #  geom_vline(xintercept = 0.536) +
   scale_y_continuous(breaks = seq(0.1, 1,0.1))+
-  scale_x_continuous(breaks = seq(0.2, 0.7, 0.05), limits = c(0.1,0.82))+
+  scale_x_continuous(breaks = seq(0.2, 0.7, 0.1), limits = c(0.1,0.82))+
   labs(x="Cutoff", y = "IMPROVE TME values", color = "Type") +
   scale_color_manual(breaks = c("sensitivity","speceficity"),
                      values = c("#8dd3c7","#bebada") ) +
@@ -69,7 +69,7 @@ Fig5C_cutoff_figure_TME <-
 
 # read on the graph specific cutoffs 
 cut_off_tme_cross = 0.415
-cut_off_tme_90 = 0.545
+cut_off_tme_90 = 0.548
   
 Fig5C_cutoff_figure_TME <- Fig5C_cutoff_figure_TME +   
   geom_vline(xintercept = cut_off_tme_cross) +
@@ -115,8 +115,8 @@ Fig5C_cutoff_figure <-
   guides(colour = guide_legend(override.aes = list(size=5)))
 
 #ggsave(p_rf, file = "results/PaperPlots/Fig5/Fig5B_cutoff_rf_figure.pdf", width = 5 , height = 3 )
-cut_off_cross = 0.41
-cut_off_90 = 0.54
+cut_off_cross = 0.412
+cut_off_90 = 0.539
 
 Fig5C_cutoff_figure_legend <- get_legend(Fig5C_cutoff_figure)
 Fig5C_cutoff_figure <- Fig5C_cutoff_figure + 
@@ -165,6 +165,8 @@ rankel_cutoff_90_speceficity = 0.05
 p_rankel <- p_rankel +
 geom_vline(xintercept = rankel_cutoff_cross) +
   geom_vline(xintercept = rankel_cutoff_90_speceficity) +
+  geom_vline(xintercept = rankel_cutoff_cross) +
+  geom_vline(xintercept = rankel_cutoff_90_speceficity) 
 
   # save data for figure 
 save(cut_off_90,cut_off_cross,cut_off_tme_90,cut_off_tme_cross,

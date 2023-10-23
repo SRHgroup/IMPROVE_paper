@@ -4,18 +4,13 @@ library(tidyverse)
 #install.packages(c("devtools","curl")) ##Installs devtools and the MCPcounter dependancy 'curl'
 library(devtools)
 #install_github("ebecht/MCPcounter",ref="master", subdir="Source")
-# library(openxlsx)
-# library(devtools)
-# library(ggsignif)
-# library(ggplot2)
-# library(ggpubr)
-# library(ggbeeswarm)
-# library(readxl)
-
-#load("data/01_preprosessing_data/Rdata/01_3_merge_peptides.Rdata")
+source("bin/R_script/99_functions.R")
 # ----------------------------
-RNA_all_data <- read.table("data/01_data/RNA_data/01_2_RNA_all_data.txt")
+RNA_all_data_raw <- read.table("data/01_data/RNA_data/01_2_RNA_all_data.txt")
+# samples from cell lines
+RNA_all_data  <- RNA_all_data_raw 
 
+unique(RNA_all_data$Sample)
 RNA_all_data$mean_exp <- as.numeric(RNA_all_data$mean_exp )
 RNA_all_data <- RNA_all_data %>% group_by(Sample,hugo_symbol) %>% 
   summarise_at(vars(mean_exp), list(mean_exp = mean))
@@ -35,42 +30,51 @@ genes=read.table(curl:::curl("http://raw.githubusercontent.com/ebecht/MCPcounter
 intersect(rownames(RNA_data_wide),genes[,"HUGO symbols"])
 
 MCP_counter_matrix <- MCPcounter::MCPcounter.estimate(RNA_data_wide, featuresType="HUGO_symbols")
+
+# try with mean --
+# ------------------------------------------
+MCP_counter_mean <- colMeans(MCP_counter_matrix)
+
+# ------end -----------------------------------------
+
 MCP_counter_matrix <- t(MCP_counter_matrix)
 MCP_counter_matrix <- as.data.frame(MCP_counter_matrix)
 MCP_counter_matrix$Sample <- rownames(MCP_counter_matrix)
-
-
+unique(all_peptides$Sample)
 
 MCP_counter_matrix <- MCP_counter_matrix %>% 
   rename("Tcells" = `T cells`,"TcellsCD8" =`CD8 T cells`, "CytoxLympho" = `Cytotoxic lymphocytes`,
          "Blinage"= `B lineage`,"NKcells" = `NK cells`,"Monocytes" =`Monocytic lineage`,
          "MyeloidDC" = `Myeloid dendritic cells`,"Endothelial"=`Endothelial cells` )
+unique(all_peptides$Sample)
 
-# M22_MCP <- MCP_counter_matrix %>% 
-#   gather(., key = "feature", value = "count" , -Sample) %>% 
-#   filter(Sample %in% c("MM909_22_1","MM909_22_2")) %>% 
-#   group_by(feature) %>% summarize(count = mean(count, na.rm=TRUE)) %>% 
-#   mutate(Sample = "MM909_22_1") %>% 
-#   spread(., key = feature , value = count)
-
-
-
-#MCP_counter_matrix <- MCP_counter_matrix %>% filter(!Sample %in%c("MM909_22_1","MM909_22_2")) %>% bind_rows(.,M22_MCP)
 
 ##################### 
 
+# CYT
+#----------
 TME_feature <- RNA_all_data %>% 
-  filter(hugo_symbol %in% c("GZMA","PRF1","HLA-A","HLA-B","HLA-C")) 
+  filter(hugo_symbol %in% c("GZMA","PRF1")) 
+
+TME_marker <- TME_feature %>%
+  #  filter(Sample %in% Sampel_to_select ) %>% 
+  mutate(Sampe_hugo = paste(Sample,hugo_symbol, sep = "_")) %>% 
+  distinct(Sampe_hugo, .keep_all = T) %>% 
+  dplyr::select(Sample,hugo_symbol,mean_exp) %>% 
+  filter(hugo_symbol %in% c("PRF1","GZMA")) %>% 
+  spread(., key = hugo_symbol, value = mean_exp) 
+
+# calculate geometric mean 
+TME_marker$CYT <- apply(TME_marker[ ,c('PRF1', 'GZMA')], 1, gm_mean)
+
+## HLA expression 
+# -----------------------------------
+HLA_feature <- RNA_all_data %>% 
+  filter(hugo_symbol %in% c("HLA-A","HLA-B","HLA-C")) 
+
+  
+save(MCP_counter_matrix, HLA_feature,TME_marker,MCP_counter_mean, file = "data/02_feature_data/TME_and_mcp_counter.Rdata")
 
 
-# # Sample 22 mean 
-# MM22_TME <- TME_exp_dat %>% 
-#   filter(Sample %in% c("MM909_22_1","MM909_22_2")) %>% 
-#   group_by(hugo_symbol) %>% summarize(mean_exp = mean(mean_exp, na.rm=TRUE)) %>% 
-#   mutate(Sample = "MM909_22_1") 
-#   
-# TME_feature <- TME_feature %>% filter(!Sample %in% c("MM909_22_1","MM909_22_2")) %>% 
-#   bind_rows(., MM22_TME)
+unique(all_peptides$Sample)
 
-
-save(MCP_counter_matrix, TME_feature, file = "data/02_feature_data/TME_and_mcp_counter.Rdata")
