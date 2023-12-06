@@ -20,7 +20,7 @@ All prediction results from the CV model, the NNAlign model.
 Paper_figures consist of code for all figures in the paper 
 
 ## Models 
-All the saved models from the 5-fold cross validation. 
+All the saved models from the 5-fold cross validation. The folder i found in https://github.com/SRHgroup/IMPROVE_tool (no neeed for storage twice ;) ) 
 
 
 # Contact informations
