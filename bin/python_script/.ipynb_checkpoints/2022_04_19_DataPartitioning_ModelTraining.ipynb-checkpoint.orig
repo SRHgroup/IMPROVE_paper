@@ -1,0 +1,1144 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+<<<<<<< HEAD
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+=======
+   "execution_count": 1,
+   "id": "6d4c3056",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "source": [
+    "import random\n",
+    "import os, sys\n",
+    "import seaborn as sns\n",
+    "import pandas as pd\n",
+    "import matplotlib.pyplot as plt\n",
+    "import numpy as np\n",
+    "import itertools\n",
+    "import scipy\n",
+    "import matplotlib as mpl\n",
+    "import importlib\n",
+    "import pickle\n",
+    "from past.utils import old_div\n",
+    "import random\n",
+    "\n",
+    "import sklearn\n",
+    "\n",
+    "import time\n",
+    "import datetime \n",
+    "\n",
+    "from sklearn.ensemble import RandomForestClassifier\n",
+    "from sklearn.linear_model import LogisticRegression\n",
+    "from sklearn.neural_network import MLPClassifier\n",
+    "\n",
+    "from sklearn.decomposition import PCA\n",
+    "\n",
+    "sys.path.append(os.path.join('.','modules'))\n",
+    "\n",
+    "import partitionTools\n",
+    "import rankEpiTools\n",
+    "import dfTools\n",
+    "import overlapTools\n",
+    "import PlottingTools\n",
+    "import modelTrainEval\n",
+    "import pickleTools\n",
+    "import NNanalysis\n",
+    "import patientSelectionTraining\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "ca3d5ee3",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Display Parameters"
+   ]
+  },
+  {
+   "cell_type": "code",
+<<<<<<< HEAD
+   "execution_count": null,
+=======
+   "execution_count": 2,
+   "id": "35119c8c",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<svg  width=\"220\" height=\"55\"><rect x=\"0\" y=\"0\" width=\"55\" height=\"55\" style=\"fill:#0b2491;stroke-width:2;stroke:rgb(255,255,255)\"/><rect x=\"55\" y=\"0\" width=\"55\" height=\"55\" style=\"fill:#cad54b;stroke-width:2;stroke:rgb(255,255,255)\"/><rect x=\"110\" y=\"0\" width=\"55\" height=\"55\" style=\"fill:#9ad9e7;stroke-width:2;stroke:rgb(255,255,255)\"/><rect x=\"165\" y=\"0\" width=\"55\" height=\"55\" style=\"fill:#00cfb6;stroke-width:2;stroke:rgb(255,255,255)\"/></svg>"
+      ],
+      "text/plain": [
+       "[(0.043137254901960784, 0.1411764705882353, 0.5686274509803921),\n",
+       " (0.792156862745098, 0.8352941176470589, 0.29411764705882354),\n",
+       " (0.6039215686274509, 0.8509803921568627, 0.9058823529411765),\n",
+       " (0.0, 0.8117647058823529, 0.7137254901960784)]"
+      ]
+     },
+     "execution_count": 2,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pd.set_option(\"display.max_columns\",999)\n",
+    "pd.set_option(\"display.max_rows\",None)\n",
+    "#sns.set_theme(style=\"darkgrid\")\n",
+    "plt.style.use('seaborn')\n",
+    "\n",
+    "#mpl.rcParams.keys()\n",
+    "sns.set_context(context='talk',rc={\"lines.linewidth\": 2,})\n",
+    "plt.rcParams.update({'font.size':22})\n",
+    "plt.rcParams.update({'font.size':22})\n",
+    "plt.rc('xtick', labelsize=22)\n",
+    "plt.rc('ytick', labelsize=22)\n",
+    "plt.rc('axes', labelsize=22)\n",
+    "\n",
+    "mpl.rcParams['savefig.bbox'] = 'tight'\n",
+    "pal = sns.color_palette()\n",
+    "\n",
+    "pacColors = ['#0b2491','#cad54b','#9ad9e7','#00cfb6']\n",
+    "sns.set_palette(pacColors)\n",
+    "sns.color_palette()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "f329470d",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Directories"
+   ]
+  },
+  {
+   "cell_type": "code",
+<<<<<<< HEAD
+   "execution_count": null,
+=======
+   "execution_count": 3,
+   "id": "e2ea8a42",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'../../../../Presentations/2022_04_19_RNAnorm_PatientSelection/fig'"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "homeDir = '../..'\n",
+    "#figDir = os.path.join(homeDir,'fig','2022_04_08_RNAnorm_PatientSelection')\n",
+    "\n",
+    "#figDir = os.path.join(homeDir,'..','..','Presentations','2022_04_25_PAC_ModelComparison','fig')\n",
+    "figDir = os.path.join(homeDir,'..','..','Presentations','2022_04_19_RNAnorm_PatientSelection','fig')\n",
+    "\n",
+    "\n",
+    "\n",
+    "datDir = os.path.join(homeDir,'data')\n",
+    "datDir_birkir = os.path.join(datDir,'birkir_data')\n",
+    "\n",
+    "figDir"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "991e7ed8",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Read in Master dataframe"
+   ]
+  },
+  {
+   "cell_type": "code",
+<<<<<<< HEAD
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+=======
+   "execution_count": 4,
+   "id": "f0241cfd",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "/Users/birkirreynisson/miniforge3/lib/python3.9/site-packages/IPython/core/interactiveshell.py:3444: DtypeWarning: Columns (3,67) have mixed types.Specify dtype option on import or set low_memory=False.\n",
+      "  exec(code_obj, self.user_global_ns, self.user_ns)\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "Dataset\n",
+       "BC      6228\n",
+       "Neye    5919\n",
+       "RH      7377\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "source": [
+    "dfMaster = pd.read_csv(os.path.join(datDir_birkir,'dfFeatureMerge_Master.tsv'),sep='\\t')\n",
+    "dfMaster['Dataset'] = dfMaster['Patient'].apply(lambda pat:pat.split('-')[0])\n",
+    "dfMaster['Sample'] = dfMaster['Patient'].apply(lambda pat:int(pat.split('-')[1]))\n",
+    "dfMaster['Patient'] = dfMaster.apply(lambda row: \"{}-{}\".format(row['Dataset'],int(row['Sample'])),axis=1)\n",
+    "dfMaster = dfMaster[dfMaster['Dataset']!='Tesla']\n",
+    "\n",
+    "dfMaster.groupby('Dataset').apply(len)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "4b2abf10",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "## Number of Positives"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "b1668ff7",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfMaster['Target'].sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "ecc68934",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "## Number of Patients"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "fb16f8ab",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "len(dfMaster.groupby('Patient'))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "7812aafd",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### RNA TPM logtransform"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "3366a963",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def rnaLogTrans(tpm,minVal = 1.0,maxVal=1500):\n",
+    "    #Apply normalization function as defined by Morten in some early publication \n",
+    "    #- find that publication\n",
+    "    if tpm > maxVal:\n",
+    "        return 1.0\n",
+    "    elif tpm <= minVal:\n",
+    "        return 0.0#np.log10(minVal)\n",
+    "    else:\n",
+    "        return old_div(np.log10(tpm),np.log10(maxVal))#+np.log10(minVal)\n",
+    "    \n",
+    "\n",
+    "dfMaster.sort_values('Gl',ascending=False)[['PeptMut','Gp','Gl','Core','CoreNonAnchor']].head()\n",
+    "\n",
+    "dfMaster['ExprTrans'] = dfMaster['Expr'].apply(lambda tpm:rnaLogTrans(tpm,minVal=0.01))\n",
+    "dfMaster['ExprTrans'] = (dfMaster['ExprTrans']+abs(dfMaster['ExprTrans'].min()))/dfMaster['ExprTrans'].max()\n",
+    "dfMaster['ExprTrans'] = (dfMaster['ExprTrans'])/dfMaster['ExprTrans'].max()\n",
+    "\n",
+    "dfMaster['Expr/EL_41'] = dfMaster['ExprTrans']/dfMaster['%Rank_EL_mut']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "17a3d7f9",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "# Define CYT score from RNA files"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "5045a992",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### !!!!! Define Local directory with Big RNAseq file !!!!!"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "81134357",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "datDir_rna = os.path.join(homeDir,'..','dat','2022_03_16_DatFromAnnie')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "e1893092",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfRNA = pd.read_csv(os.path.join(datDir_rna,'RNA_all_data.txt'),sep=' ')\n",
+    "dfRNA = dfRNA[dfRNA['mean_exp']!='mean_exp']\n",
+    "dfRNA['mean_exp'] = dfRNA['mean_exp'].apply(float)\n",
+    "dfRNA.head()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "1110e9fc",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Gen CYT scores from RNA"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "6db1cbe6",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "def addDScol(sample):\n",
+    "    if 'MM909' in sample:\n",
+    "        return 'Neye'\n",
+    "    if 'PATIEN' in sample:\n",
+    "        return 'RH'\n",
+    "    else:\n",
+    "        return 'BC'\n",
+    "\n",
+    "def procSampleCol(sample):\n",
+    "    sample = sample.replace('MM909_','')\n",
+    "    sample = sample.replace('PATIEN','')\n",
+    "    sample = sample.replace('A','')\n",
+    "    sample = sample.replace('B','')\n",
+    "    sample = sample.split('_')[0]\n",
+    "    sample = int(sample)\n",
+    "    return sample\n",
+    "\n",
+    "def getHouseKeepingRNA(df,houseKeepingGenes=[]):\n",
+    "    df = df.rename(columns={'hugo_symbol':'Gene','mean_exp':'Exp'})\n",
+    "    if houseKeepingGenes:\n",
+    "        dfFilt = df[df['Gene'].apply(lambda gene: gene in houseKeepingGenes)]\n",
+    "    else:\n",
+    "        dfFilt = df\n",
+    "    dfFilt.loc[:,'Exp'] = dfFilt['Exp'].apply(lambda exp: round(float(exp),2))\n",
+    "    dfFilt.loc[:,'Sample'] = dfFilt['Sample'].apply(str)\n",
+    "    dfFilt.loc[:,'Dataset'] = dfFilt['Sample'].apply(addDScol)\n",
+    "    dfFilt.loc[:,'Sample'] = dfFilt['Sample'].apply(procSampleCol)\n",
+    "    dfFilt.loc[:,'Patient'] = dfFilt.apply(lambda row: \"{}-{}\".format(row['Dataset'],row['Sample']),axis=1)\n",
+    "    dfFilt = dfFilt.groupby(['Dataset','Sample','Gene','Patient'])['Exp'].agg(np.median).reset_index()\n",
+    "    return dfFilt\n",
+    "\n",
+    "def geo_mean_overflow(iterable):\n",
+    "    return np.exp(np.log(iterable).mean())\n",
+    "\n",
+    "dfRNAfilt_cyt = getHouseKeepingRNA(dfRNA,houseKeepingGenes=['GZMA','PRF1'])\n",
+    "dfRNAfilt_cyt_pivot = dfRNAfilt_cyt[['Gene','Patient','Exp']].pivot(index='Gene',columns='Patient',values='Exp')\n",
+    "dfRNAfilt_cyt_pivot = dfRNAfilt_cyt_pivot.T.reset_index()\n",
+    "\n",
+    "dfRNAfilt_cyt_pivot['CYT'] = dfRNAfilt_cyt_pivot.apply(lambda row: geo_mean_overflow([row['GZMA'],row['PRF1']]),axis=1)\n",
+    "\n",
+    "dfRespCount = dfMaster.groupby(['Dataset','Sample','Patient'])['Target'].apply(sum).reset_index().rename(columns={'Target':'Detected'})\n",
+    "dfRespCount = dfRespCount.merge(dfRNAfilt_cyt_pivot,on='Patient')\n",
+    "print(len(dfRespCount))\n",
+    "#dfRespCountDTU\n",
+    "\n",
+    "print(len(dfMaster))\n",
+    "dfMaster_cyt = dfMaster.merge(dfRespCount[['Patient','CYT']].drop_duplicates(),on='Patient')\n",
+    "print(len(dfMaster_cyt))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "5d9d4c80",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "PlottingTools.scatterCorr(dfRespCount[dfRespCount['CYT']<10000],'CYT','Detected',hue='Dataset',corrAnnot=(40,15),show=False,corrAnnot_spearman=True)\n",
+    "plt.savefig(os.path.join(figDir,'scatterCorr_Total.png'),dpi=600)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "0d1f691f",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "importlib.reload(PlottingTools)\n",
+    "\n",
+    "for dataset, dfG in dfRespCount.groupby('Dataset'):\n",
+    "    PlottingTools.scatterCorr(dfG[dfG['CYT']<10000],'CYT','Detected',corrAnnot=(5,18),show=False,corrAnnot_spearman=True)\n",
+    "    plt.title(\"Dataset: {}\".format(dataset))\n",
+    "    plt.savefig(os.path.join(figDir,'scatterCorr_{}.png'.format(dataset)),dpi=600)\n",
+    "    plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "6c12a156",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfRespCount['logCYT'] = dfRespCount['CYT'].apply(np.log)\n",
+    "sns.kdeplot(data=dfRespCount,x='logCYT',hue='Dataset')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "0557db84",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "# Datset Partitioning"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "0e0b8301",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### There is overlap in peptides across datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "6bf46604",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "importlib.reload(overlapTools)\n",
+    "\n",
+    "categories,overlapMat,overlapMatRel = overlapTools.getOverlapHeatmap(dfMaster_cyt,catCol='Dataset')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "d43df759",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "overlapMatDF = pd.DataFrame(overlapMat,columns=categories,index=categories)\n",
+    "sns.heatmap(overlapMatDF,annot=True, annot_kws={\"size\": 24},fmt=\".0f\")\n",
+    "plt.title(\"k-mer Overlap: All Peptides\")\n",
+    "plt.savefig(os.path.join(figDir,'kmerOverlap_all.png'),dpi=600)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "0d55edcc",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### However, there is not overlap in terms of Positives"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "8bced2a5",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "categories,overlapMatPos,overlapMatRelPos = overlapTools.getOverlapHeatmap(dfMaster_cyt[dfMaster_cyt['Target']==1.0],catCol='Dataset')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "214e1429",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "overlapMatDFPos = pd.DataFrame(overlapMatPos,columns=categories,index=categories)\n",
+    "sns.heatmap(overlapMatDFPos,annot=True, annot_kws={\"size\": 24},fmt=\".0f\")\n",
+    "plt.title(\"k-mer Overlap: Positive peptides\")\n",
+    "plt.savefig(os.path.join(figDir,'kmerOverlap_pos.png'),dpi=600)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "00590d2e",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "categories,overlapMatPatPos,overlapMatRelPatPos = overlapTools.getOverlapHeatmap(dfMaster_cyt[dfMaster_cyt['Target']==1.0],catCol='Patient')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "cfcfdfac",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "diagSum = np.diagonal(overlapMatPatPos).sum()\n",
+    "totalSum = overlapMatDFPos.values.sum()\n",
+    "print(\"Number of positives: {}\".format(totalSum))\n",
+    "print(\"Sum of diagonal of overlap matrix in a patient wise comparison of positives: {}\".format(diagSum))\n",
+    "print(\"Conclusion, there is no overlap of positives. So clustering partitions by patients is mostly justified\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "50b1c149",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "# Partitioning Datasets"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "7c4eae34",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "importlib.reload(partitionTools)\n",
+    "dfMaster_motifPatPartitions = partitionTools.motifPatientClusterPositivesAddNegatives(dfMaster_cyt)\n",
+    "\n",
+    "print(len(dfMaster_motifPatPartitions))\n",
+    "dfMaster_motifPatPartitions.groupby(['Partition','Dataset']).apply(len).reset_index()"
+   ]
+  },
+  {
+   "cell_type": "code",
+<<<<<<< HEAD
+   "execution_count": null,
+=======
+   "execution_count": 5,
+   "id": "ee1b3c3c",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'dfMaster_motifPatPartitions' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[0;32m/var/folders/bk/16vpn_712dz_2xvm65b414mh0000gn/T/ipykernel_85464/890599462.py\u001b[0m in \u001b[0;36m<module>\u001b[0;34m\u001b[0m\n\u001b[0;32m----> 1\u001b[0;31m \u001b[0mdfMaster_motifPatPartitions\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mto_csv\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mos\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mpath\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mjoin\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0mdatDir_birkir\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;34m'dfMaster_PatientPartitioned.txt'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0msep\u001b[0m\u001b[0;34m=\u001b[0m\u001b[0;34m'\\t'\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m: name 'dfMaster_motifPatPartitions' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "dfMaster_motifPatPartitions.to_csv(os.path.join(datDir_birkir,'dfMaster_PatientPartitioned.txt'),sep='\\t')"
+   ]
+  },
+  {
+<<<<<<< HEAD
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Patient Selection Training"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+=======
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "de4f1988-16be-4038-9563-9225a413a066",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "dfMaster_motifPatPartitions = pd.read_csv(os.path.join(datDir_birkir,'dfMaster_PatientPartitioned.txt'),sep='\\t')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "826c7acd-406e-4965-a8d8-d7dc9ab2bf75",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Patient  Partition\n",
+       "BC-1233  2             199\n",
+       "BC-1249  0             199\n",
+       "BC-1849  4             200\n",
+       "BC-1994  1             200\n",
+       "BC-2131  1             411\n",
+       "BC-2278  0             200\n",
+       "BC-2389  0             203\n",
+       "BC-2849  2             420\n",
+       "BC-2937  3             322\n",
+       "BC-3529  3             197\n",
+       "BC-40    3             576\n",
+       "BC-471   3             199\n",
+       "BC-5037  0             586\n",
+       "BC-5122  2             200\n",
+       "BC-522   1             199\n",
+       "BC-5338  1             200\n",
+       "BC-6229  4             250\n",
+       "BC-6428  0             200\n",
+       "BC-6800  4             214\n",
+       "BC-7577  1             200\n",
+       "BC-7729  1             199\n",
+       "BC-8728  2             200\n",
+       "BC-9517  4             254\n",
+       "BC-9723  0             200\n",
+       "Neye-1   1             200\n",
+       "Neye-11  1             200\n",
+       "Neye-14  1             200\n",
+       "Neye-15  1             248\n",
+       "Neye-16  3             200\n",
+       "Neye-17  0             200\n",
+       "Neye-2   2             200\n",
+       "Neye-22  2             585\n",
+       "Neye-24  1             199\n",
+       "Neye-25  2             200\n",
+       "Neye-26  2             294\n",
+       "Neye-27  2             151\n",
+       "Neye-29  3             200\n",
+       "Neye-3   4             411\n",
+       "Neye-31  1             200\n",
+       "Neye-34  4             200\n",
+       "Neye-35  0             160\n",
+       "Neye-36  2             200\n",
+       "Neye-37  2             200\n",
+       "Neye-40  3             200\n",
+       "Neye-42  1             314\n",
+       "Neye-43  3             159\n",
+       "Neye-45  4             199\n",
+       "Neye-46  4             200\n",
+       "Neye-47  2             200\n",
+       "Neye-6   3             199\n",
+       "RH-10    3             309\n",
+       "RH-11    0            1152\n",
+       "RH-13    4             333\n",
+       "RH-15    3             117\n",
+       "RH-16    0             334\n",
+       "RH-17    3             330\n",
+       "RH-18    4             238\n",
+       "RH-19    3             676\n",
+       "RH-21    0             433\n",
+       "RH-22    0             100\n",
+       "RH-24    0             161\n",
+       "RH-25    4             125\n",
+       "RH-27    4             100\n",
+       "RH-29    4             122\n",
+       "RH-30    4             106\n",
+       "RH-31    1            1360\n",
+       "RH-33    3             722\n",
+       "RH-34    2             100\n",
+       "RH-35    3             166\n",
+       "RH-8     0             393\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#dfMaster_motifPatPartitions.groupby(['Partition','Patient']).apply(len)\n",
+    "dfMaster_motifPatPartitions.groupby(['Patient','Partition']).apply(len)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "5e0dd828",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "# Nested CV"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "e0ed4a81",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "features = ['%Rank_EL_mut','%Rank_BA_mut',\n",
+    "         'Agrotopicity','%Rank_PRIME',\n",
+    "         '%Rank_Stab','ExprTrans',\n",
+    "         'Expr/EL_41',\n",
+    "            'Prop_Tiny','Prop_Small',\n",
+    "            'Prop_Aliphatic','Prop_Aromatic',\n",
+    "            'Prop_Non-polar','Prop_Polar',\n",
+    "            'Prop_Charged','Prop_Basic',\n",
+    "            'Prop_Acidic','Prop_Hydrophobic']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "5058a723",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "modelKWlist = {'random_state':[1],\n",
+    "               'n_jobs':[-1],\n",
+    "                #'class_weight':[None,'balanced','balanced_subsample'],\n",
+    "               'class_weight':['balanced'],\n",
+    "                #'max_depth':[1,3,5,7],\n",
+    "                #'n_estimators':[10,100,1000]\n",
+    "               'max_depth':[1,3,4],\n",
+    "                'n_estimators':[100]\n",
+    "                \n",
+    "          }\n",
+    "\n",
+    "fold = 5\n",
+    "importlib.reload(patientSelectionTraining)\n",
+    "nestedCVdict_baseline = patientSelectionTraining.trainingPatientFilterApply_nestedCVouter(dfMaster_motifPatPartitions,features,folds=fold,targCol='Target',modelType='RF',outCol='classPred',modelKWlist=modelKWlist,sortParam='AUC0.1')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "a12ed6ed",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Compute model performance"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "0e46e3a2",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "patientSelectionTraining.getYieldDFproc(nestedCVdict_baseline['dfEval'])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "80b41b50-4bdd-4a82-a099-b673766d60a4",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "patientSelectionTraining.getYieldDFproc"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "829cf881",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Which hyperparams where selected for each fold?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "239e50dd",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "nestedCVdict_baseline['yieldDict']"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "ce9a30f2",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Distribution of Prediction scores across partitions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "a9445cba",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "sns.boxplot(data=nestedCVdict_baseline['dfEval'],x='Partition',y='classPred')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "12c1cb65",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Feature importance stability across folds"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "d3544a4e",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "nestedCVdict_baseline.keys()\n",
+    "\n",
+    "featImps = np.zeros((5,17))\n",
+    "featImps\n",
+    "for i in range(5):\n",
+    "    featImps[i,:] = nestedCVdict_baseline['models'][i].feature_importances_\n",
+    "sns.heatmap(featImps)\n",
+    "plt.xticks(range(len(features)),features,rotation=90)\n",
+    "plt.ylabel('CV-Folds')\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "8cf84213",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "## Correlation between feature imporance vectors across CV-folds"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "cba80025",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "pd.DataFrame(featImps,columns=features).T.corr()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+<<<<<<< HEAD
+=======
+   "id": "8706d83d",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "source": [
+    "### Compare with NNAlign on same partition"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "edcd25ee",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfEval_nestedCV = nestedCVdict_baseline['dfEval']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "a547449b",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfEval_nestedCV[['PeptMut','Target','Partition']].to_csv('../../results/NNAlign/neoEpi_nnalign.txt',sep=' ',index=False,header=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "3ba978f5",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfMaster_NNalign = pd.read_csv('../../results/NNalign/nnalign_21963/nnalign_21963.lg6.sorted.pred',sep='\\t')\n",
+    "\n",
+    "dfMaster_NNalign['Target'] = dfMaster_NNalign['Measure'].apply(lambda targ: targ if targ==1.0 else 0.0)\n",
+    "dfMaster_NNalign.head()\n",
+    "\n",
+    "NNanalysis.getAUCThresh(dfMaster_NNalign['Target'],dfMaster_NNalign['Prediction'],thresh=0.1)[-1]\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "fd1c20ff",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "print(NNanalysis.getAUCThresh(dfMaster_NNalign['Target'],dfMaster_NNalign['Prediction'])[-1])\n",
+    "print(NNanalysis.getAUCThresh(nestedCVdict_baseline['dfEval']['Target'],nestedCVdict_baseline['dfEval']['classPred'])[-1])\n",
+    "#print(NNanalysis.getAUCThresh(nestedCVdict_patSel['dfEval']['Target'],nestedCVdict_patSel['dfEval']['classPred'])[-1])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "2eaa5ba6",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfMaster_NNalign['Target'].sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "c48743b9",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "figDir"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "8d071cce",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "NNanalysis.getAUC_EL_plotROC(dfMaster_NNalign['Target'],dfMaster_NNalign['Prediction'],show=False,label='NNalign')\n",
+    "NNanalysis.getAUC_EL_plotROC(nestedCVdict_baseline['dfEval']['Target'],nestedCVdict_baseline['dfEval']['classPred'],show=False,label='Baseline')\n",
+    "#NNanalysis.getAUC_EL_plotROC(nestedCVdict_patSel['dfEval']['Target'],nestedCVdict_patSel['dfEval']['classPred'],show=False,label='Patient Selection')\n",
+    "#plt.xlim(0.,0.2)\n",
+    "plt.legend()\n",
+    "plt.savefig(os.path.join(figDir,'compModelWithNNAlign.png'),dpi=600)\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "b336e2d4",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dfEval_nestedCV"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+<<<<<<< HEAD
+=======
+   "id": "9dd9074e",
+>>>>>>> 17c3a71abe2a8fead6c34e7864ea9c62b3c29107
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.6"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}

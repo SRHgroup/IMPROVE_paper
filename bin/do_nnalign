@@ -1,0 +1,67 @@
+#! /bin/tcsh 
+
+set file = 03_NNalign_input_with_p_inf.txt
+
+foreach n ( 0 1 2 3 4 )
+
+if ( ! -e $n.train ) then
+
+cat $file | gawk -v n=$n '$3==n' > $n.test
+cat $file | gawk -v n=$n '$3!=n' > $n.train
+
+pepgrep -v $n.train $n.test > $n.train_filt
+
+cat $n.train_filt | args 3 | sort -u | gawk 'BEGIN{n=0}{print n,$1; n++}' > $$.tmp
+
+foreach m ( `cat $$.tmp | gawk '{print $1"+"$2}' ` )
+
+set m1 = `echo $m | gawk -F "+" '{print $1}'`
+set m2 = `echo $m | gawk -F "+" '{print $2}'`
+
+cat $n.train_filt | gawk -v m1=$m1 -v m2=$m2 '{if ( $3 == m2 ) { print $1,$2,m1,$4,$5}}' >> $n.train_fmt
+
+end
+
+rm -f $$.tmp
+
+endif
+
+if ( ! -e $n.out ) then 
+
+nnalign-2.1 -f $n.train_fmt -procs 2 -name $n.Run -split 3 -stop -lgt 6 -iter 200 -nh 10 -eplen 6 -seeds 5 > $n.out 
+
+endif
+
+if ( -e $n.out && ! -e $n.test.pred ) then 
+
+set L = 6
+set DIR = `cat $n.out | grep "COPIED RESULTS FILES" | gawk '{print $NF}' `
+set Model = `ls -ltr $DIR/*$L.model.txt | args 9 `
+
+echo $n $L $DIR $Model
+
+nnalign-2.1 -model $Model -testset $n.test -name $n.Predict > $n.out.predict
+
+set PFILE = `ls -ltr $n.Predict_*/*.evalset.txt | args 9`
+
+echo $n $PFILE
+
+cp $PFILE $n.test.pred
+
+echo "Peptide Target Split HLA donor" > $$.pep
+
+cat $n.test >> $$.pep
+
+paste $$.pep $n.test.pred > $n.test.pred_cmb
+
+rm -f $$.pep
+
+endif
+
+end
+
+if ( ! -e all.test_pred_cmb ) then
+
+cat {0,1,2,3,4}.test.pred_cmb > all.test_pred_cmb
+
+endif
